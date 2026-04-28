@@ -1,7 +1,34 @@
 const API_BASE_URL = "https://ai-threat-detection-soc-1.onrender.com";
 
-export async function predictThreat(data: any) {
-  const res = await fetch(`${API_BASE_URL}/predict`, {   // ✅ CORRECT
+// ===== TYPES =====
+export interface ThreatInput {
+  [key: string]: number;
+}
+
+export interface ThreatResponse {
+  threat: "LOW" | "MEDIUM" | "HIGH";
+  confidence: number;
+  probabilities?: Record<string, number>;
+  attack_type?: string;
+  attack_probabilities?: Record<string, number>;
+  shap_values?: any[];
+  is_anomalous?: boolean;
+  anomaly_score?: number;
+  location?: any;
+}
+
+export interface ApiStatus {
+  gemini: boolean;
+  ipstack: boolean;
+  shap: boolean;
+  aria: boolean;
+  attack_classifier: boolean;
+  isolation_forest: boolean;
+}
+
+// ===== PREDICT =====
+export async function predictThreat(data: ThreatInput): Promise<ThreatResponse> {
+  const res = await fetch(`${API_BASE_URL}/predict`, {   // ✅ CORRECT ROUTE
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -10,8 +37,21 @@ export async function predictThreat(data: any) {
   });
 
   if (!res.ok) {
-    throw new Error("API error");
+    const text = await res.text();
+    throw new Error(`Prediction failed: ${res.status} - ${text}`);
   }
 
   return res.json();
+}
+
+// ===== API STATUS =====
+export async function getApiStatus(): Promise<ApiStatus> {
+  const res = await fetch(`${API_BASE_URL}/api-status`);  // ✅ CORRECT
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch API status");
+  }
+
+  const json = await res.json();
+  return json.data;
 }
