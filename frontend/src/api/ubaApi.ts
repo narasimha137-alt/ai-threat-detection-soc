@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://127.0.0.1:5000/api/uba';
+const API_BASE_URL = 'https://ai-threat-detection-soc-1.onrender.com/api/uba';
 
 export interface UbaActivity {
   id: number;
