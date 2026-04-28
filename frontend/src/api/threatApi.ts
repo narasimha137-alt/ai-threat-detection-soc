@@ -15,7 +15,29 @@ export interface ThreatResponse {
   anomaly_score?: number;
   location?: any;
 }
+export type BatchResult = {
+  total: number;
+  results: any[];
+  attack_breakdown: Record<string, number>;
+  threat_breakdown: Record<string, number>;
+};
 
+export async function batchPredict(file: File): Promise<BatchResult> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${BASE_URL}/predict-batch`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error("Batch prediction failed");
+  }
+
+  const json = await res.json();
+  return json.data;
+}
 export async function uploadDataset(file: File) {
   const formData = new FormData();
   formData.append("file", file);
