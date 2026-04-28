@@ -6,7 +6,9 @@ import os
 import json
 
 app = Flask(__name__)
-CORS(app)
+from flask_cors import CORS
+
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ================================
 # LOAD MODELS (NO TRAINING HERE)
