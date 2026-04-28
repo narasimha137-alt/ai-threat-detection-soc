@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://ai-threat-detection-soc-1.onrender.com";
 
 export interface ThreatInput {
   duration: number;
