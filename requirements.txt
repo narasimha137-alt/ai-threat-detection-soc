@@ -1,10 +1,7 @@
-gunicorn
 flask
 flask-cors
-joblib
+gunicorn
 pandas
 numpy
 scikit-learn
-python-dotenv
-requests
-sqlalchemy
+joblib
