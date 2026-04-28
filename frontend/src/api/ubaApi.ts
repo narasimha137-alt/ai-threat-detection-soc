@@ -1,5 +1,4 @@
-const API_BASE_URL = "https://ai-threat-detection-soc-1.onrender.com";
-
+const BASE_URL = import.meta.env.VITE_API_URL;
 export async function fetchUbaData() {
   const res = await fetch(`${API_BASE_URL}/sample-connections`); // ✅ existing route
 
