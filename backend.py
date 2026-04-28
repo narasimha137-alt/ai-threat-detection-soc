@@ -954,7 +954,12 @@ def api_status():
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "online"})
-
+@app.route("/")
+def home():
+    return {
+        "status": "ok",
+        "message": "AI Threat Detection Backend is running"
+    }
 
 if __name__ == "__main__":
     import os
