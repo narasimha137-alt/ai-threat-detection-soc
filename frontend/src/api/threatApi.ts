@@ -1,5 +1,4 @@
-const BASE_URL = "https://ai-threat-detection-soc-1.onrender.com";
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export interface ThreatInput {
   duration: number;
   protocol_type: number;
