@@ -1,156 +1,39 @@
-import { ThreatResponse, AttackType } from '../../api/threatApi';
-import { ZeroDayBadge } from './ZeroDayBadge';
-import { IncidentReport } from './IncidentReport';
+import React from "react";
+
+type ThreatLevel = "LOW" | "MEDIUM" | "HIGH";
 
 interface ThreatLevelDisplayProps {
-  level: 'LOW' | 'MEDIUM' | 'HIGH';
-  result: ThreatResponse | null;
-  confidenceThreshold: number;
+  level: ThreatLevel;
+  result?: any;
+  confidenceThreshold?: number;
 }
 
-const ATTACK_COLORS: Record<string, string> = {
-  Normal: 'text-green-400',
-  DoS:    'text-red-400',
-  Probe:  'text-yellow-400',
-  R2L:    'text-orange-400',
-  U2R:    'text-purple-400',
-};
-
-const ATTACK_BG: Record<string, string> = {
-  Normal: 'bg-green-500/20 border-green-500/40',
-  DoS:    'bg-red-500/20 border-red-500/40',
-  Probe:  'bg-yellow-500/20 border-yellow-500/40',
-  R2L:    'bg-orange-500/20 border-orange-500/40',
-  U2R:    'bg-purple-500/20 border-purple-500/40',
-};
-
-const ATTACK_BAR_COLOR: Record<string, string> = {
-  Normal: 'bg-green-500',
-  DoS:    'bg-red-500',
-  Probe:  'bg-yellow-500',
-  R2L:    'bg-orange-500',
-  U2R:    'bg-purple-500',
-};
-
-const ATTACK_DESCRIPTIONS: Record<string, string> = {
-  Normal: 'No malicious activity detected',
-  DoS:    'Denial of Service — flooding the target',
-  Probe:  'Surveillance/scanning — probing for vulnerabilities',
-  R2L:    'Remote to Local — unauthorized remote access attempt',
-  U2R:    'User to Root — privilege escalation attempt',
-};
-
-export function ThreatLevelDisplay({ level, result, confidenceThreshold }: ThreatLevelDisplayProps) {
-  const cfg = {
-    LOW:    { border: 'border-green-500',  glow: 'shadow-[0_0_20px_rgba(34,197,94,0.5)]',   text: 'text-green-400',  bg: 'bg-green-500/10',  label: 'ALL CLEAR', icon: '✓' },
-    MEDIUM: { border: 'border-yellow-500', glow: 'shadow-[0_0_20px_rgba(234,179,8,0.5)]',   text: 'text-yellow-400', bg: 'bg-yellow-500/10', label: 'MONITOR',   icon: '◈' },
-    HIGH:   { border: 'border-red-500 animate-pulse', glow: 'shadow-[0_0_30px_rgba(239,68,68,0.8)] animate-pulse', text: 'text-red-400 animate-pulse', bg: 'bg-red-500/20', label: 'ALERT', icon: '⚠' },
-  }[level];
-
-  const attackType = result?.attack_type ?? null;
-  const attackProbs = result?.attack_probabilities ?? null;
-  const isUncertain = result ? result.confidence < confidenceThreshold : false;
+const ThreatLevelDisplay: React.FC<ThreatLevelDisplayProps> = ({
+  level,
+  result,
+  confidenceThreshold = 50,
+}) => {
+  const getColor = () => {
+    if (level === "HIGH") return "text-red-500";
+    if (level === "MEDIUM") return "text-yellow-400";
+    return "text-green-400";
+  };
 
   return (
-    <div className={`relative border-4 ${cfg.border} ${cfg.glow} ${cfg.bg} rounded-lg p-8 w-full threat-panel`}>
-      {level === 'HIGH' && (
-        <div className="absolute -top-4 -right-4 flex items-center gap-2 bg-red-600 px-4 py-2 rounded-lg animate-pulse">
-          <span className="text-xl">🚨</span>
-          <span className="font-bold text-white font-mono text-sm">ALERT</span>
-        </div>
-      )}
-      <div className="text-center">
-        <div className="text-xs tracking-widest text-gray-400 mb-2 font-mono">THREAT LEVEL</div>
-        <div className={`text-6xl font-bold tracking-wider ${cfg.text} font-mono`}>{level}</div>
-        <div className={`text-sm mt-2 font-mono tracking-widest ${cfg.text} opacity-70`}>{cfg.label}</div>
-
-        {/* Uncertain badge */}
-        {isUncertain && (
-          <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-yellow-500/60 bg-yellow-500/15 animate-pulse">
-            <span className="text-yellow-400 font-mono font-bold text-sm tracking-wider">
-              ⚠ UNCERTAIN — NEEDS HUMAN REVIEW
-            </span>
-          </div>
-        )}
-
-        {/* Attack Type Badge */}
-        {attackType && !isUncertain && (
-          <div className="mt-4 space-y-3">
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border ${ATTACK_BG[attackType] || 'bg-gray-500/20 border-gray-500/40'}`}>
-              <span className={`text-lg font-bold font-mono tracking-wider ${ATTACK_COLORS[attackType] || 'text-gray-400'}`}>
-                {attackType === 'Normal' ? '✓ NORMAL TRAFFIC' : `⚠ ${attackType.toUpperCase()} ATTACK DETECTED`}
-              </span>
-            </div>
-            <div className="text-xs text-gray-500 font-mono">
-              {ATTACK_DESCRIPTIONS[attackType] || ''}
-            </div>
-          </div>
-        )}
-
-        {/* Zero-Day Badge */}
-        {result && (
-          <ZeroDayBadge
-            isAnomalous={result.is_anomalous ?? false}
-            attackType={result.attack_type ?? 'Normal'}
-            anomalyScore={result.anomaly_score}
-          />
-        )}
-
-        {/* Attack Category Probabilities */}
-        {attackProbs && (
-          <div className="mt-4 text-left space-y-1.5">
-            <div className="text-xs text-gray-500 font-mono tracking-wider mb-2 text-center">ATTACK CATEGORY ANALYSIS</div>
-            {(['Normal', 'DoS', 'Probe', 'R2L', 'U2R'] as AttackType[]).map((cat) => {
-              const val = attackProbs[cat] ?? 0;
-              return (
-                <div key={cat} className="flex items-center gap-2">
-                  <span className={`text-xs font-mono w-14 text-right ${ATTACK_COLORS[cat]}`}>{cat}</span>
-                  <div className="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-1000 ${ATTACK_BAR_COLOR[cat]}`}
-                      style={{ width: `${val}%` }}
-                    />
-                  </div>
-                  <span className="text-xs font-mono text-gray-400 w-12">{val.toFixed(1)}%</span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Confidence bar */}
-        {result && (
-          <div className="mt-4">
-            <div className="text-xs text-gray-500 mb-1 font-mono">CONFIDENCE: {result.confidence.toFixed(1)}%</div>
-            <div className="h-2 bg-gray-800 rounded-full overflow-hidden relative">
-              <div
-                className={`h-full rounded-full transition-all duration-1000 ${level === 'HIGH' ? 'bg-red-500' : level === 'MEDIUM' ? 'bg-yellow-500' : 'bg-green-500'}`}
-                style={{ width: `${result.confidence}%` }}
-              />
-              {/* Threshold marker */}
-              <div
-                className="absolute top-0 h-full w-0.5 bg-yellow-400/70"
-                style={{ left: `${confidenceThreshold}%` }}
-                title={`Threshold: ${confidenceThreshold}%`}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Level indicators */}
-        <div className="mt-4 flex justify-center gap-2">
-          <div className={`w-16 h-2 rounded-full ${level === 'LOW' ? 'bg-green-500' : 'bg-gray-700'}`} />
-          <div className={`w-16 h-2 rounded-full ${level === 'MEDIUM' ? 'bg-yellow-500' : 'bg-gray-700'}`} />
-          <div className={`w-16 h-2 rounded-full ${level === 'HIGH' ? 'bg-red-500 animate-pulse' : 'bg-gray-700'}`} />
-        </div>
-
-        {/* Generate Report button */}
-        {result && (
-          <div className="mt-4 flex justify-center">
-            <IncidentReport result={result} />
-          </div>
-        )}
+    <div className="text-center">
+      <h2 className="text-xl font-mono text-gray-400 mb-2">
+        Threat Level
+      </h2>
+      <div className={`text-5xl font-bold ${getColor()}`}>
+        {level}
       </div>
+      {result && (
+        <p className="text-sm text-gray-500 mt-2">
+          Confidence: {result.confidence ?? 0}%
+        </p>
+      )}
     </div>
   );
-}
+};
+
+export default ThreatLevelDisplay;
