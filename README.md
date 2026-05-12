@@ -1,18 +1,144 @@
-# 🛡️ AI Threat Detection SOC Dashboard
+# AI Threat Detection SOC
 
-A complete, full-stack Security Operations Center (SOC) dashboard powered by Machine Learning and AI. This system analyzes network traffic in real-time to detect, classify, and explain cyber threats using advanced data science.
+An AI-powered Security Operations Center (SOC) project focused on detecting cyber threats, analyzing suspicious activities, and automating security monitoring using machine learning and real-time log analysis.
 
-![SOC Dashboard Preview](https://via.placeholder.com/1000x500.png?text=AI+Threat+Detection+SOC+Dashboard)
+## Overview
 
-## ✨ Core Features
-*   **Real-Time Threat Detection**: Uses a Random Forest classifier trained on the NSL-KDD dataset to detect attacks (DoS, Probe, R2L, U2R).
-*   **Zero-Day Anomaly Engine**: Employs an Isolation Forest to flag "Zero-Day" novel attacks that don't match known signatures.
-*   **Explainable AI (SHAP)**: Instantly breaks down exactly *why* an attack was flagged (e.g., showing high source bytes or strange flags).
-*   **Global Geolocation Map**: Real-time pulsing world map showing the geographical origin of attacks using the IPStack API.
-*   **Automated AI Reporting**: Uses Gemini 1.5 Flash to generate professional executive summaries and incident response actions for detected threats.
-*   **Simulation Runner**: Test the dashboard using real historical network data.
+This project simulates a modern SOC environment where AI techniques are used to identify anomalies, detect malicious behavior, and generate alerts for potential cyber attacks.
+
+The system is designed to help security analysts automate threat detection workflows and improve incident response efficiency.
+
 ---
-## 🧠 Technology Stack
-*   **Frontend**: React (Vite), TypeScript, Tailwind CSS, Recharts, Framer Motion
-*   **Backend**: Python, Flask, Scikit-Learn (Random Forest, Isolation Forest)
-*   **APIs**: Google Gemini (NLP Reports), IPStack (Geolocation)
+
+## Features
+
+- Real-time threat monitoring
+- AI/ML-based anomaly detection
+- Suspicious log analysis
+- Automated alert generation
+- Threat classification
+- Security event visualization
+- Modular and scalable architecture
+
+---
+
+## Tech Stack
+
+### Backend
+- Python
+- Flask / FastAPI
+
+### Machine Learning
+- Scikit-learn
+- Pandas
+- NumPy
+
+### Security Concepts
+- SOC Operations
+- SIEM Workflows
+- Threat Intelligence
+- Log Monitoring
+
+### Visualization
+- Streamlit / Dashboard UI
+
+---
+
+## Project Structure
+
+```bash
+ai-threat-detection-soc/
+│
+├── data/                  # Training and testing datasets
+├── logs/                  # Security logs
+├── models/                # Saved ML models
+├── scripts/               # Detection scripts
+├── alerts/                # Alert management
+├── dashboard/             # SOC dashboard
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/narasimha137-alt/ai-threat-detection-soc.git
+cd ai-threat-detection-soc
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Running the Project
+
+Start the application:
+
+```bash
+python app.py
+```
+
+If using Streamlit dashboard:
+
+```bash
+streamlit run dashboard/app.py
+```
+
+---
+
+## Use Cases
+
+- Cyber threat detection
+- Security operations simulation
+- SOC automation
+- Research and learning
+- Log anomaly detection
+- Incident monitoring
+
+---
+
+## Future Enhancements
+
+- Deep learning-based threat analysis
+- Real-time packet inspection
+- Cloud deployment
+- SIEM integration
+- Threat intelligence API integration
+- Advanced visualization dashboard
+
+---
+
+## Screenshots
+
+_Add screenshots of the dashboard, alerts, or detection results here._
+
+---
+
+## Contributing
+
+Contributions, improvements, and suggestions are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Open a pull request
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+## Author
+
+Developed by **Narasimha**
